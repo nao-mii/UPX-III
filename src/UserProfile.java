@@ -13,6 +13,8 @@ public class UserProfile extends JFrame {
     public UserProfile(String nomeUsuario, MainScreen mainScreen){
         this.nomeUsuario = nomeUsuario;
         this.mainScreen = mainScreen;
+        
+        //cria o frame de layout
         setTitle("Perfil do Usuário");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(600, 400);

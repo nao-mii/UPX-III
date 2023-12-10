@@ -14,6 +14,7 @@ public class MainScreen extends JFrame {
     public MainScreen(String nomeUsuario) {
         this.nomeUsuario = nomeUsuario;
         
+        //cria o frame de layout
         setTitle("Sistema de Não Conformidade");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(700, 500);

@@ -12,9 +12,12 @@ public class SegurancaForm extends JFrame {
     private String nomeUsuario;
     
     public SegurancaForm(String nomeUsuario) {
+        //cria conexao com o bd
         String URL = "jdbc:mysql://localhost:3306/NaoConformidadeUPX";
         String usuario = "root";
         String senha_banco = "MMatheus2204@!";
+        
+        //cria conexao com o bd
         setTitle("Formulário de Segurança");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1500, 800);
@@ -53,6 +56,7 @@ public class SegurancaForm extends JFrame {
         JPanel buttonPanel = new JPanel();
         JButton salvarButton = new JButton("Salvar");
         
+        //cria a funcionalidade de salvamento
         salvarButton.addActionListener((ActionEvent e) -> {
             String tipoOcorrencia = (String) tipoComboBox.getSelectedItem();
             String titulo = tituloField.getText();

@@ -17,6 +17,7 @@ public class LoginScreen {
     private static final String senha_banco = "MMatheus2204@!";
 
     public LoginScreen() {
+        //cria o frame de layout
         frame = new JFrame("Login");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(300, 200);
@@ -37,6 +38,7 @@ public class LoginScreen {
         frame.add(loginButton);
         frame.add(forgotPasswordButton);
 
+        //cria funcionalidade do botao de login
         loginButton.addActionListener((ActionEvent e) -> {
             String email = emailField.getText();
             String password = new String(passwordField.getPassword());
@@ -59,6 +61,7 @@ public class LoginScreen {
         frame.setLocationRelativeTo(null);
     }
 
+    //autentica o usuario se conectando com o bd
     String authenticateUser(String email, String senha) {
         String query = "SELECT nome, tipo FROM usuarios WHERE email = ? AND senha = ?";
         
@@ -90,14 +93,15 @@ public class LoginScreen {
             return null;
         }
     }
-    
+    //dependendo do login utilizado, redirecionada para a tela MainScreen
     private void openMainScreen(String nomeUsuario){
         JOptionPane.showMessageDialog(null,"Login bem-sucedido como usuário!");
         MainScreen mainScreen = new MainScreen(nomeUsuario);
         mainScreen.setVisible(true);
         frame.dispose();
     }
-    
+
+    //dependendo do login utilizado, redirecionada para a tela MasterScreen
     private void openMasterScreen(String nomeUsuario){
         JOptionPane.showMessageDialog(null, "Login bem-sucedido como master");
         MasterScreen masterScreen = new MasterScreen(nomeUsuario);
@@ -105,6 +109,7 @@ public class LoginScreen {
         frame.dispose();
     }
     
+    //caso a senha precise ser resetada
     boolean resetPassword(String email, String data) {
         String query = "SELECT * FROM usuarios WHERE email = ? AND data_nasc = ?";
         
@@ -130,6 +135,7 @@ public class LoginScreen {
             System.err.println("Driver JDBC do SQLite não encontrado.");
     }}
      
+    //atualiza a senha no bd casa tenha sido resetada
      public static void updatePassword(String email, String newPassword) {
         String query = "UPDATE usuarios SET senha = ? WHERE email = ?";
 

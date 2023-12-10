@@ -11,9 +11,12 @@ public final class AguaForm extends JFrame {
     private String nomeUsuario;
     
     public AguaForm(String nomeUsuario) {
+        //cria a conexão com o banco de dados
         String URL = "jdbc:mysql://localhost:3306/NaoConformidadeUPX";
         String usuario = "root";
         String senha_banco = "MMatheus2204@!";
+        
+        //cria o frame/layout
         setTitle("Formulário de Água");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1500, 800);
@@ -52,6 +55,7 @@ public final class AguaForm extends JFrame {
         JPanel buttonPanel = new JPanel();
         JButton salvarButton = new JButton("Salvar");
         
+        //desenvolve o funcionamento do botao de salvar
         salvarButton.addActionListener((ActionEvent e) -> {
             String tipoOcorrencia = (String) tipoComboBox.getSelectedItem();
             String titulo = tituloField.getText();

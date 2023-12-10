@@ -14,7 +14,8 @@ public class MasterScreen extends JFrame {
 
     public MasterScreen(String nomeUsuario) {
         this.nomeUsuario = nomeUsuario;
-
+        
+        //cria o frame de layout
         setTitle("Master Screen");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(800, 600);
@@ -37,7 +38,6 @@ public class MasterScreen extends JFrame {
         panel.add(scrollPane, BorderLayout.CENTER);
 
         // Adicionar um botão para atualizar o status
-        // Alteração no código do botão atualizarStatusButton
         JButton atualizarStatusButton = new JButton("Atualizar Status");
         atualizarStatusButton.addActionListener((ActionEvent e) -> {
             int selectedRow = table.getSelectedRow();

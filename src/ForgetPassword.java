@@ -9,6 +9,7 @@ public class ForgetPassword {
     private LoginScreen main;
     
     public ForgetPassword(LoginScreen main){
+        //cria o frame de layout
         frame = new JFrame("Redefinir Senha");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400,200);
@@ -27,6 +28,7 @@ public class ForgetPassword {
         frame.add(dataField);
         frame.add(resetButton);
         
+        //cria a funcionaldade do botao de reset que redireciona para a tela de criação de senha
         resetButton.addActionListener((ActionEvent e) -> {
             String email = emailField.getText();
             String data = dataField.getText();

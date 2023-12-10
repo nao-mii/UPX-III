@@ -11,9 +11,12 @@ public class AcessForm extends JFrame {
     private String nomeUsuario;
     
     public AcessForm(String nomeUsuario) {
-        String URL = "jdbc:mysql://localhost:3306/NaoConformidadeUPX";
+        //cria conexão como banco de dados
+        String URL = "jdbc:mysql://localhost:3306/NaoConformidadeUPX"; 
         String usuario = "root";
         String senha_banco = "MMatheus2204@!";
+        
+        //cria o frame de tela
         setTitle("Formulário de Energia");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1500, 800);
@@ -47,11 +50,11 @@ public class AcessForm extends JFrame {
         panel.add(statusLabel);
         panel.add(statusComboBox);
         panel.add(tempoRespostaLabel);
-        
 
         JPanel buttonPanel = new JPanel();
         JButton salvarButton = new JButton("Salvar");
         
+        //desenvolve a funcionalidade do botao de salvar o formulario
         salvarButton.addActionListener((ActionEvent e) -> {
             String tipoOcorrencia = (String) tipoComboBox.getSelectedItem();
             String titulo = tituloField.getText();

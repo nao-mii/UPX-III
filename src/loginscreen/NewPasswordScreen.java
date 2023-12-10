@@ -7,6 +7,7 @@ public class NewPasswordScreen extends JFrame {
     private JTextField confirmPasswordField;
 
     public NewPasswordScreen(LoginScreen main, String email) {
+        //cria o frame de layout
         setTitle("Redefinir Senha");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 250);
@@ -25,6 +26,7 @@ public class NewPasswordScreen extends JFrame {
         add(confirmPasswordField);
         add(resetPasswordButton);
 
+        //desenvolve a funcionalidade do botao de reset
         resetPasswordButton.addActionListener((ActionEvent e) -> {
             String newPassword = passwordField.getText();
             String confirmPassword = confirmPasswordField.getText();
