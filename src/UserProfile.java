@@ -1,49 +1,70 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
 
 public class UserProfile extends JFrame {
     private final String nomeUsuario;
+    public final MainScreen mainScreen;
+    private JTable ticketTable;
 
-    public UserProfile(String nomeUsuario) {
+    public UserProfile(String nomeUsuario, MainScreen mainScreen){
         this.nomeUsuario = nomeUsuario;
+        this.mainScreen = mainScreen;
         setTitle("Perfil do Usuário");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 300);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setSize(600, 400);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(3, 1));
+        JPanel panel = new JPanel(new BorderLayout());
 
         JLabel nameLabel = new JLabel("Nome do Usuário: " + nomeUsuario);
 
-        DefaultListModel<String> ticketListModel = new DefaultListModel<>();
-        JList<String> ticketList = new JList<>(ticketListModel);
-        JScrollPane scrollPane = new JScrollPane(ticketList);
+        DefaultTableModel tableModel = new DefaultTableModel();
+        tableModel.addColumn("ID");
+        tableModel.addColumn("Tipo de Ocorrência");
+        tableModel.addColumn("Título");
+        tableModel.addColumn("Descrição");
+        tableModel.addColumn("Status");
+        tableModel.addColumn("Data de Abertura");
+
+        ticketTable = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(ticketTable);
 
         JButton refreshButton = new JButton("Atualizar Tickets");
-        refreshButton.addActionListener(e -> updateTicketList(ticketListModel));
+        refreshButton.addActionListener(e -> updateTicketList(tableModel));
 
-        panel.add(nameLabel);
-        panel.add(scrollPane);
-        panel.add(refreshButton);
+        JButton backButton = new JButton("Voltar à Página Inicial");
+        backButton.addActionListener((ActionEvent e) -> {
+            mainScreen.setVisible(true);  // Torna a MainScreen visível novamente
+            dispose();  // Fecha a UserProfile
+        });
 
-        setLayout(new BorderLayout());
-        add(panel, BorderLayout.CENTER);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(refreshButton);
+        buttonPanel.add(backButton);
 
-        updateTicketList(ticketListModel); // Atualiza a lista de tickets ao iniciar a tela
+        panel.add(nameLabel, BorderLayout.NORTH);
+        panel.add(scrollPane, BorderLayout.CENTER);
+        panel.add(buttonPanel, BorderLayout.SOUTH);
+
+        add(panel);
+
+        updateTicketList(tableModel); // Atualiza a lista de tickets ao iniciar a tela
 
         setVisible(true);
     }
 
-    private void updateTicketList(DefaultListModel<String> ticketListModel) {
+    private void updateTicketList(DefaultTableModel tableModel) {
         // Conectar ao banco de dados e buscar tickets do usuário
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/NaoConformidadeUPX", "root", "MMatheus2204@!")) {
-            String query = "SELECT id, tipo_ocorrencia, titulo, descricao, status_call FROM tickets WHERE nome = ?";
+            String query = "SELECT id, tipo_ocorrencia, titulo, descricao, status_call, data_ticket FROM tickets WHERE usuario = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, nomeUsuario);
 
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    ticketListModel.clear(); // Limpa a lista antes de adicionar os novos tickets
+                    tableModel.setRowCount(0); // Limpa a tabela antes de adicionar os novos tickets
 
                     while (resultSet.next()) {
                         int id = resultSet.getInt("id");
@@ -51,9 +72,10 @@ public class UserProfile extends JFrame {
                         String titulo = resultSet.getString("titulo");
                         String descricao = resultSet.getString("descricao");
                         String status = resultSet.getString("status_call");
+                        String data = resultSet.getString("data_ticket");
 
-                        // Adiciona o ticket à lista
-                        ticketListModel.addElement("Ticket " + id + ": " + tipoOcorrencia + " - " + titulo + " - " + descricao + " - " + status);
+                        // Adiciona o ticket à tabela
+                        tableModel.addRow(new Object[]{id, tipoOcorrencia, titulo, descricao, status, data});
                     }
                 }
             }
@@ -63,6 +85,33 @@ public class UserProfile extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new UserProfile("NomeDoUsuario")); // Substitua "NomeDoUsuario" pelo nome real do usuário
+        SwingUtilities.invokeLater(() -> {
+            MainScreen mainScreen = new MainScreen();
+            mainScreen.setVisible(true);
+
+            UserProfile userProfile = new UserProfile("NomeDoUsuario", mainScreen);
+            userProfile.setVisible(true);
+        });
     }
 }
+
+class MainScreen extends JFrame {
+    public MainScreen() {
+        setTitle("Main Screen");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(400, 300);
+
+        JButton openUserProfileButton = new JButton("Abrir UserProfile");
+        openUserProfileButton.addActionListener((ActionEvent e) -> {
+            UserProfile userProfile = new UserProfile("NomeDoUsuario", MainScreen.this);
+            userProfile.setVisible(true);
+            setVisible(false);  // Esconde a MainScreen ao abrir a UserProfile
+        });
+
+        JPanel panel = new JPanel();
+        panel.add(openUserProfileButton);
+
+        add(panel);
+    }
+}
+

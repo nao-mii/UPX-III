@@ -16,7 +16,7 @@ public class MainScreen extends JFrame {
         
         setTitle("Sistema de Não Conformidade");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1500, 800);
+        setSize(700, 500);
         setLayout(new BorderLayout());
         
         getContentPane().setBackground(Color.WHITE);
@@ -26,6 +26,7 @@ public class MainScreen extends JFrame {
         
         JLabel welcomeLabel = new JLabel("Bem-vindo ao Sistema de Não Conformidade!");
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         
         headerPanel.add(welcomeLabel);
         
@@ -42,43 +43,62 @@ public class MainScreen extends JFrame {
 
         // Adicionando ActionListeners para os botões
         energiaButton.addActionListener((ActionEvent e) -> {
-            EnergiaForm energiaForm = new EnergiaForm();
+            EnergiaForm energiaForm = new EnergiaForm(nomeUsuario);
             energiaForm.setVisible(true);
         });
         
         aguaButton.addActionListener((ActionEvent e) -> {
-            AguaForm aguaForm = new AguaForm();
+            AguaForm aguaForm = new AguaForm(nomeUsuario);
             aguaForm.setVisible(true);
         });
         
         residuosButton.addActionListener((ActionEvent e) -> {
-            DescarteForm descarteForm = new DescarteForm();
+            DescarteForm descarteForm = new DescarteForm(nomeUsuario);
             descarteForm.setVisible(true);
         });
         
         acessibilidadeButton.addActionListener((ActionEvent e) -> {
-            AcessForm acessForm = new AcessForm();
+            AcessForm acessForm = new AcessForm(nomeUsuario);
             acessForm.setVisible(true);
         });
         
         manutencaoButton.addActionListener((ActionEvent e) -> {
-            ManuForm manuForm = new ManuForm();
+            ManuForm manuForm = new ManuForm(nomeUsuario);
             manuForm.setVisible(true);
         });
         
         areasVerdesButton.addActionListener((ActionEvent e) -> {
-            AreasForm areasForm = new AreasForm();
+            AreasForm areasForm = new AreasForm(nomeUsuario);
             areasForm.setVisible(true);
         });
         
         segurancaButton.addActionListener((ActionEvent e) -> {
-            SegurancaForm segurancaForm = new SegurancaForm();
+            SegurancaForm segurancaForm = new SegurancaForm(nomeUsuario);
             segurancaForm.setVisible(true);
         });
         
         perfilButton.addActionListener((ActionEvent e) -> {
-            UserProfile userProfile = new UserProfile(nomeUsuario);
+            UserProfile userProfile = new UserProfile(nomeUsuario, MainScreen.this);
+            dispose();
             userProfile.setVisible(true);
+
+            EnergiaForm energiaForm = new EnergiaForm(nomeUsuario);
+            energiaForm.setVisible(false);
+            
+            AguaForm aguaForm = new AguaForm(nomeUsuario);
+            aguaForm.setVisible(false);
+            
+            AreasForm areasForm = new AreasForm(nomeUsuario);
+            areasForm.setVisible(false);
+            
+            DescarteForm descarteForm = new DescarteForm(nomeUsuario);
+            descarteForm.setVisible(false);
+            
+            ManuForm manuForm = new ManuForm(nomeUsuario);
+            manuForm.setVisible(false);
+            
+            SegurancaForm segurancaForm = new SegurancaForm(nomeUsuario);
+            segurancaForm.setVisible(false);
         });
 
         // Layouts para as linhas
@@ -118,3 +138,4 @@ public class MainScreen extends JFrame {
         });
     }
 }
+

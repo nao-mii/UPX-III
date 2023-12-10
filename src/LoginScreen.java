@@ -37,20 +37,14 @@ public class LoginScreen {
         frame.add(loginButton);
         frame.add(forgotPasswordButton);
 
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String email = emailField.getText();
-                String password = new String(passwordField.getPassword());
-                String nomeUsuario = authenticateUser(email, password);
-                if (nomeUsuario != null) {
-                    JOptionPane.showMessageDialog(null, "Login bem-sucedido!");
-                    MainScreen mainScreen = new MainScreen(nomeUsuario);
-                    mainScreen.setVisible(true);
-                    frame.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Login falhou. Verifique suas credenciais.");
-                }
+        loginButton.addActionListener((ActionEvent e) -> {
+            String email = emailField.getText();
+            String password = new String(passwordField.getPassword());
+            String nomeUsuario = authenticateUser(email, password);
+            if (nomeUsuario != null) {
+                JOptionPane.showMessageDialog(null, "Login bem-sucedido!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Login falhou. Verifique suas credenciais.");
             }
         });
 
@@ -66,7 +60,7 @@ public class LoginScreen {
     }
 
     String authenticateUser(String email, String senha) {
-        String query = "SELECT nome FROM usuarios WHERE email = ? AND senha = ?";
+        String query = "SELECT nome, tipo FROM usuarios WHERE email = ? AND senha = ?";
         
         try (Connection connection = DriverManager.getConnection(URL, usuario, senha_banco);
             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -76,7 +70,18 @@ public class LoginScreen {
             ResultSet resultSet = preparedStatement.executeQuery();
             
             if(resultSet.next()){
-                return resultSet.getString("nome");
+                String nomeUsuario = resultSet.getString("nome");
+                String tipoUsuario = resultSet.getString("tipo");
+                
+                if("usuario".equals(tipoUsuario)){
+                    openMainScreen(nomeUsuario);
+                }else if("master".equals(tipoUsuario)){
+                    openMasterScreen(nomeUsuario);
+                }else {
+                    return null;
+                }
+                return nomeUsuario;
+             
             } else {
                 return null;
             }
@@ -84,6 +89,20 @@ public class LoginScreen {
 // Trate qualquer exceção que possa ocorrer durante a execução da consulta.
             return null;
         }
+    }
+    
+    private void openMainScreen(String nomeUsuario){
+        JOptionPane.showMessageDialog(null,"Login bem-sucedido como usuário!");
+        MainScreen mainScreen = new MainScreen(nomeUsuario);
+        mainScreen.setVisible(true);
+        frame.dispose();
+    }
+    
+    private void openMasterScreen(String nomeUsuario){
+        JOptionPane.showMessageDialog(null, "Login bem-sucedido como master");
+        MasterScreen masterScreen = new MasterScreen(nomeUsuario);
+        masterScreen.setVisible(true);
+        frame.dispose();
     }
     
     boolean resetPassword(String email, String data) {

@@ -9,12 +9,13 @@ public class SegurancaForm extends JFrame {
     private JTextArea descricaoArea;
     private final JComboBox<String> statusComboBox;
     private JComboBox<String> tipoComboBox;
+    private String nomeUsuario;
     
-    public SegurancaForm() {
+    public SegurancaForm(String nomeUsuario) {
         String URL = "jdbc:mysql://localhost:3306/NaoConformidadeUPX";
         String usuario = "root";
         String senha_banco = "MMatheus2204@!";
-        setTitle("Formulário de Energia");
+        setTitle("Formulário de Segurança");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1500, 800);
         
@@ -24,6 +25,8 @@ public class SegurancaForm extends JFrame {
         JLabel tipoLabel = new JLabel("Tipo de Ocorrência:");
         String[] tipos = {"","Falhas de Sistema de Segurança"}; // Opções para o JComboBox
         tipoComboBox = new JComboBox<>(tipos);
+        
+        JLabel tempoRespostaLabel = new JLabel("Tempo Médio de Resposta: 5-10 dias");
 
         JLabel tituloLabel = new JLabel("Título:");
         tituloField = new JTextField();
@@ -44,6 +47,7 @@ public class SegurancaForm extends JFrame {
         panel.add(descricaoScrollPane);
         panel.add(statusLabel);
         panel.add(statusComboBox);
+        panel.add(tempoRespostaLabel);
         
 
         JPanel buttonPanel = new JPanel();
@@ -57,13 +61,14 @@ public class SegurancaForm extends JFrame {
             
             // Conectar ao banco de dados e inserir as informações
             try (final Connection connection = DriverManager.getConnection(URL, usuario, senha_banco)) {
-                String insertQuery = "INSERT INTO tickets (tipo_ocorrencia, titulo, descricao, status_call, tipo) VALUES (?, ?, ?, ?,?)";
+                String insertQuery = "INSERT INTO tickets (tipo_ocorrencia, titulo, descricao, status_call, usuario, tipo) VALUES (?, ?, ?, ?, ?, ?)";
                 try (final PreparedStatement preparedStatement = connection.prepareStatement(insertQuery,Statement.RETURN_GENERATED_KEYS )) {
                     preparedStatement.setString(1, tipoOcorrencia);
                     preparedStatement.setString(2, titulo);
                     preparedStatement.setString(3, descricao);
                     preparedStatement.setString(4, (String) selectedStatus);
-                    preparedStatement.setString(5, "Segurança");
+                    preparedStatement.setString(5, nomeUsuario);
+                    preparedStatement.setString(6, "Segurança");
                     preparedStatement.execute();
                     
                     // Obter o ID do ticket inserido
@@ -87,7 +92,7 @@ public class SegurancaForm extends JFrame {
 
         setVisible(true);
     }
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new EnergiaForm());
+    public void setNomeUsuario(String nomeUsuario){
+        this.nomeUsuario = nomeUsuario;
     }
 }

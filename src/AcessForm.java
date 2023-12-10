@@ -10,7 +10,7 @@ public class AcessForm extends JFrame {
     private JComboBox<String> tipoComboBox;
     private String nomeUsuario;
     
-    public AcessForm() {
+    public AcessForm(String nomeUsuario) {
         String URL = "jdbc:mysql://localhost:3306/NaoConformidadeUPX";
         String usuario = "root";
         String senha_banco = "MMatheus2204@!";
@@ -24,6 +24,8 @@ public class AcessForm extends JFrame {
         JLabel tipoLabel = new JLabel("Tipo de Ocorrência:");
         String[] tipos = {"","Ausencia de rampas", "Calçadas ou Areas de Circulação Inadequadas"}; // Opções para o JComboBox
         tipoComboBox = new JComboBox<>(tipos);
+        
+        JLabel tempoRespostaLabel = new JLabel("Tempo Médio de Resposta: 15-30 dias");
 
         JLabel tituloLabel = new JLabel("Título:");
         tituloField = new JTextField();
@@ -44,6 +46,7 @@ public class AcessForm extends JFrame {
         panel.add(descricaoScrollPane);
         panel.add(statusLabel);
         panel.add(statusComboBox);
+        panel.add(tempoRespostaLabel);
         
 
         JPanel buttonPanel = new JPanel();
@@ -57,14 +60,14 @@ public class AcessForm extends JFrame {
             
             // Conectar ao banco de dados e inserir as informações
             try (final Connection connection = DriverManager.getConnection(URL, usuario, senha_banco)) {
-                String insertQuery = "INSERT INTO tickets (tipo_ocorrencia, titulo, descricao, status_call, tipo, nome_usuario) VALUES (?, ?, ?, ?, ?, ?)";
+                String insertQuery = "INSERT INTO tickets (tipo_ocorrencia, titulo, descricao, status_call, usuario, tipo) VALUES (?, ?, ?, ?, ?, ?)";
                 try (final PreparedStatement preparedStatement = connection.prepareStatement(insertQuery,Statement.RETURN_GENERATED_KEYS )) {
                     preparedStatement.setString(1, tipoOcorrencia);
                     preparedStatement.setString(2, titulo);
                     preparedStatement.setString(3, descricao);
                     preparedStatement.setString(4, (String) selectedStatus);
-                    preparedStatement.setString(5, "acessibilidade");
-                    preparedStatement.setString(6, nomeUsuario);
+                    preparedStatement.setString(5, nomeUsuario);
+                    preparedStatement.setString(6, "acessibilidade");
                     preparedStatement.execute();
                     
                     // Obter o ID do ticket inserido
@@ -89,6 +92,6 @@ public class AcessForm extends JFrame {
         setVisible(true);
     }
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new AcessForm());
+        SwingUtilities.invokeLater(() -> new AcessForm("Nome de Usuario"));
     }
 }

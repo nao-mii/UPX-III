@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
 
 public class AreasForm extends JFrame {
@@ -8,12 +9,13 @@ public class AreasForm extends JFrame {
     private JTextArea descricaoArea;
     private final JComboBox<String> statusComboBox;
     private JComboBox<String> tipoComboBox;
+    private String nomeUsuario;
     
-    public AreasForm() {
+    public AreasForm(String nomeUsuario) {
         String URL = "jdbc:mysql://localhost:3306/NaoConformidadeUPX";
         String usuario = "root";
         String senha_banco = "MMatheus2204@!";
-        setTitle("Formulário de Energia");
+        setTitle("Formulário de Areas Verdes");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1500, 800);
         
@@ -23,6 +25,8 @@ public class AreasForm extends JFrame {
         JLabel tipoLabel = new JLabel("Tipo de Ocorrência:");
         String[] tipos = {"","Ausencia de Areas Verdes", "Sugestoes"}; // Opções para o JComboBox
         tipoComboBox = new JComboBox<>(tipos);
+        
+        JLabel tempoRespostaLabel = new JLabel("Tempo Médio de Resposta: 30-45 dias");
 
         JLabel tituloLabel = new JLabel("Título:");
         tituloField = new JTextField();
@@ -43,6 +47,7 @@ public class AreasForm extends JFrame {
         panel.add(descricaoScrollPane);
         panel.add(statusLabel);
         panel.add(statusComboBox);
+        panel.add(tempoRespostaLabel);
         
 
         JPanel buttonPanel = new JPanel();
@@ -56,13 +61,14 @@ public class AreasForm extends JFrame {
             
             // Conectar ao banco de dados e inserir as informações
             try (final Connection connection = DriverManager.getConnection(URL, usuario, senha_banco)) {
-                String insertQuery = "INSERT INTO tickets (tipo_ocorrencia, titulo, descricao, status_call, tipo) VALUES (?, ?, ?, ?,?)";
+                String insertQuery = "INSERT INTO tickets (tipo_ocorrencia, titulo, descricao, status_call, usuario, tipo) VALUES (?, ?, ?, ?, ?, ?)";
                 try (final PreparedStatement preparedStatement = connection.prepareStatement(insertQuery,Statement.RETURN_GENERATED_KEYS )) {
                     preparedStatement.setString(1, tipoOcorrencia);
                     preparedStatement.setString(2, titulo);
                     preparedStatement.setString(3, descricao);
                     preparedStatement.setString(4, (String) selectedStatus);
-                    preparedStatement.setString(5, "Areas Verdes");
+                    preparedStatement.setString(5, nomeUsuario);
+                    preparedStatement.setString(6, "Areas Verdes");
                     preparedStatement.execute();
                     
                     // Obter o ID do ticket inserido
@@ -86,7 +92,7 @@ public class AreasForm extends JFrame {
 
         setVisible(true);
     }
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new EnergiaForm());
+    public void setNomeUsuario(String nomeUsuario){
+        this.nomeUsuario = nomeUsuario;
     }
 }

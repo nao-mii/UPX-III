@@ -8,9 +8,9 @@ public final class AguaForm extends JFrame {
     private JTextArea descricaoArea;
     private final JComboBox<String> statusComboBox;
     private JComboBox<String> tipoComboBox;
+    private String nomeUsuario;
     
-    @SuppressWarnings("empty-statement")
-    public AguaForm() {
+    public AguaForm(String nomeUsuario) {
         String URL = "jdbc:mysql://localhost:3306/NaoConformidadeUPX";
         String usuario = "root";
         String senha_banco = "MMatheus2204@!";
@@ -24,6 +24,8 @@ public final class AguaForm extends JFrame {
         JLabel tipoLabel = new JLabel("Tipo de Ocorrência:");
         String[] tipos = {"","Vazamento", "Irrigação excessiva"}; // Opções para o JComboBox
         tipoComboBox = new JComboBox<>(tipos);
+        
+        JLabel tempoRespostaLabel = new JLabel("Tempo Médio de Resposta: 2-5 dias");
 
         JLabel tituloLabel = new JLabel("Título:");
         tituloField = new JTextField();
@@ -44,6 +46,7 @@ public final class AguaForm extends JFrame {
         panel.add(descricaoScrollPane);
         panel.add(statusLabel);
         panel.add(statusComboBox);
+        panel.add(tempoRespostaLabel);
         
 
         JPanel buttonPanel = new JPanel();
@@ -57,13 +60,14 @@ public final class AguaForm extends JFrame {
             
             // Conectar ao banco de dados e inserir as informações
             try (final Connection connection = DriverManager.getConnection(URL, usuario, senha_banco)) {
-                String insertQuery = "INSERT INTO tickets (tipo_ocorrencia, titulo, descricao, status_call, tipo) VALUES (?, ?, ?, ?,?)";
+                String insertQuery = "INSERT INTO tickets (tipo_ocorrencia, titulo, descricao, status_call, usuario, tipo) VALUES (?, ?, ?, ?, ?, ?)";
                 try (final PreparedStatement preparedStatement = connection.prepareStatement(insertQuery,Statement.RETURN_GENERATED_KEYS )) {
                     preparedStatement.setString(1, tipoOcorrencia);
                     preparedStatement.setString(2, titulo);
                     preparedStatement.setString(3, descricao);
                     preparedStatement.setString(4, (String) selectedStatus);
-                    preparedStatement.setString(5, "Agua");
+                    preparedStatement.setString(5, nomeUsuario);
+                    preparedStatement.setString(6, "Agua");
                     preparedStatement.execute();
                     
                     // Obter o ID do ticket inserido
@@ -87,12 +91,7 @@ public final class AguaForm extends JFrame {
 
         setVisible(true);
     }
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new EnergiaForm());
-    }
-
-    @Override
-    public void setVisible(boolean b) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void setNomeUsuario(String nomeUsuario){
+        this.nomeUsuario = nomeUsuario;
     }
 }
