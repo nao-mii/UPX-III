@@ -1,10 +1,10 @@
 # UPX-III
 
-Sistema de Não Conformidade - Gestão de Tickets
+# Sistema de Não Conformidade - Gestão de Tickets
 
 Este projeto Java é um sistema simples de gestão de tickets para monitorar ocorrências de não conformidade em diferentes categorias. O sistema consiste em duas principais telas: MainScreen (Tela Principal) e UserProfile (Perfil do Usuário). Além disso, há formulários específicos para cada categoria de não conformidade.
 
-Funcionalidades Principais
+## Funcionalidades Principais
 Tela Principal (MainScreen):
 
 Boas-vindas ao usuário.
